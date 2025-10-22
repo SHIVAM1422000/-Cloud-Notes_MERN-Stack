@@ -5,10 +5,10 @@ import { useHistory } from 'react-router-dom'
 const Login = (props) => {
     const [credentials, setCredentials] = useState({email: "", password: ""}) 
     let history = useHistory();
-
+    const baseUrl = (process.env.NODE_ENV === "production")? "/":"http://localhost:8000/"
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch("/api/auth/login", {
+        const response = await fetch(`${baseUrl}api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -19,8 +19,8 @@ const Login = (props) => {
         console.log(json);
         if (json.success){
             // Save the auth token and redirect
-            console.log("The Login JSON");
-            console.log(json);
+            // console.log("The Login JSON");
+            // console.log(json);
             localStorage.setItem('token', json.token); 
             history.push("/");
             props.showAlert("Logged In Successfully","success");

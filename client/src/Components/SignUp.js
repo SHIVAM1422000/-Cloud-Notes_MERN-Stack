@@ -11,13 +11,14 @@ function SignUp(props) {
     const onChange = (e)=>{
         setCredentials({...credentials, [e.target.name]: e.target.value})
     }
-  
+      const baseUrl = (process.env.NODE_ENV === "production")? "/":"http://localhost:8000/"
+
 
     let history = useHistory();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch("/api/auth/create_user", {
+        const response = await fetch(`${baseUrl}/api/auth/create_user`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

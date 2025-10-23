@@ -4,11 +4,46 @@ import NoteContext from "../Context/Notes/noteContext";
 import NoteItem from "./NoteItem";
 import { useHistory } from "react-router-dom";
 import AddNote from "./AddNote";
+import "../styles/Notes.css"
 
 function Note(props) {
   const context = useContext(NoteContext);
-  const { notes, getNote, editNote } = context;
+  const { notes, getNote, editNote, setNotes } = context;
+  let originalNOTES=[];
+  useEffect(()=>{
+    originalNOTES=notes;
+  },[])
   let history = useHistory();
+  const [note, setNote] = useState({
+    id: "",
+    etitle: "",
+    edescription: "",
+    etag: "",
+  });
+  const ref = useRef(null);
+  const refClose = useRef(null);
+  const [searchQuery, setSeachQuery] = useState("");
+
+  const sortHandler = () => {
+    const result = notes.sort((a, b) => a.title.localeCompare(b.title));
+    setNotes([...result]);
+  };
+
+  const onSearchChange = (e) => {
+    setSeachQuery(e.target.value);
+  };
+
+  const searchHandler = (e) => {
+    const searchNotes = notes.filter(
+      (curr) =>
+        curr.title.includes(searchQuery) ||
+        curr.description.includes(searchQuery) ||
+        curr.tag.includes(searchQuery)
+    );
+    setNotes(searchNotes);
+    setSeachQuery("");
+  };
+
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
     if (
@@ -20,15 +55,6 @@ function Note(props) {
       history.push("/login");
     }
   }, []);
-
-  const [note, setNote] = useState({
-    id: "",
-    etitle: "",
-    edescription: "",
-    etag: "",
-  });
-  const ref = useRef(null);
-  const refClose = useRef(null);
 
   const updateNote = (currentNote) => {
     ref.current.click();
@@ -153,7 +179,29 @@ function Note(props) {
       {/* //notes fetching  */}
 
       <div className="container">
-        <h1 className="mt-2">Your Notes</h1>
+        <div>
+          <h1 className="mt-2" style={{textAlign:"center"}}>YOUR NOTES</h1>
+          <div className="features">
+            <button className="btn btn-success sort" onClick={sortHandler} style={{marginRight:"20px"}}>
+              SORT
+            </button>
+            <form className="feature-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                searchHandler();
+              }}
+            >
+              <input
+                type="text"
+                placeholder="SEARCH NOTES"
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e)}
+                className="form-control"
+              />
+              <button className="btn btn-warning">SEARCH</button>
+            </form>
+          </div>
+        </div>
         <div className="row  mt-2">
           {notes.length === 0 && "No Notes To Display"}
           {notes.map((my_note) => {

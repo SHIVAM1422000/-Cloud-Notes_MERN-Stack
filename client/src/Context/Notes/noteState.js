@@ -6,7 +6,6 @@ const NoteState = (props) => {
     process.env.NODE_ENV === "production" ? "/" : "http://localhost:8000/";
 
   const initial_notes = [];
-
   const [notes, setNotes] = useState(initial_notes);
 
   //fetch all notes
@@ -39,8 +38,6 @@ const NoteState = (props) => {
 
   const addNote = async (title, description, tag) => {
     try {
-      //Add Api Call:
-      // ************************
       const response = await fetch(`${baseUrl}api/notes/addnotes`, {
         method: "POST",
         headers: {
@@ -51,12 +48,11 @@ const NoteState = (props) => {
       });
 
       let json = await response.json();
-
-      //Frontedn Part:
-      // ***************************
       setNotes(notes.concat(json));
+      return true;
     } catch (error) {
       console.log(error);
+      return false;
     }
   };
 
@@ -130,7 +126,7 @@ const NoteState = (props) => {
 
   return (
     <NoteContext.Provider
-      value={{ notes, addNote, deleteNote, editNote, getNote }}
+      value={{ notes, addNote, deleteNote, editNote, getNote, setNotes }}
     >
       {props.children}
     </NoteContext.Provider>

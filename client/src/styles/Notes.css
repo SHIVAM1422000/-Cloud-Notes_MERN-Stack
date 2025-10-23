@@ -1,0 +1,16 @@
+.features{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn btn-success sort{
+    margin-right: 20px;
+}
+.feature-form{
+    display: flex;
+    flex-direction: row;
+       align-items: center;
+    justify-content: center;
+}
